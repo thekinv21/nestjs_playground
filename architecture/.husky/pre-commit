@@ -1,0 +1,49 @@
+#!/bin/sh
+
+echo "---"
+echo "Pre-commit Hook: Starting Code Quality Checks..."
+echo "---"
+
+
+echo "Running Prettier: Applying code formatting..."
+npx prettier . --write
+
+
+if [ $? -ne 0 ]; then
+  echo "ERROR: Prettier failed to execute. Please ensure the tool is correctly installed and configured."
+  exit 1
+fi
+
+
+echo "Running Prettier: Validating code style..."
+npx prettier . --check
+
+
+if [ $? -ne 0 ]; then
+  echo "---"
+  echo "ERROR: Prettier validation failed."
+  echo "Unformatted files were detected. The previous step may have automatically formatted them."
+  echo "Please stage and commit the changes made by Prettier."
+  echo "---"
+  exit 1
+fi
+echo "Prettier: Code formatting passed."
+
+
+echo "Running ESLint: Executing linting rules"
+pnpm lint
+
+
+if [ $? -ne 0 ]; then
+  echo "---"
+  echo "ERROR: ESLint failed."
+  echo "Linter errors must be resolved before this commit can proceed."
+  echo "---"
+  exit 1
+fi
+echo "ESLint: All checks passed"
+
+echo "---"
+echo "Pre-commit Hook: All code quality checks passed successfully."
+echo "---"
+exit 0

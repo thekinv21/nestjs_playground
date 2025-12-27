@@ -1,0 +1,44 @@
+#!/bin/sh
+
+commit_msg_file=$1
+commit_msg=$(head -n1 "$commit_msg_file")
+
+valid_types="feat|fix|refactor|chore|docs|style|test|perf|build|ci|revert|breaking"
+
+# Valid Commit Message ----> type: [branch_name][author_fullName]: Description
+
+if ! echo "$commit_msg" | grep -Eq "^($valid_types):[[:space:]]*\[[^]]+\]\[[^]]+\]:[[:space:]]*[^[:space:]].*"; then
+  echo "---"
+  echo "COMMIT VALIDATION ERROR: Invalid commit message format detected."
+  echo "The commit message must adhere to the required convention for proper history tracking."
+  echo "---"
+  echo ""
+  echo "Required Format:"
+  echo "    type:[branch_name][author_fullName]: Description of what you did"
+  echo ""
+  echo "Allowed Types and Descriptions:"
+  echo ""
+  echo "  - feat:      Introduces a new feature or capability"
+  echo "  - fix:       Corrects a bug or error in the code"
+  echo "  - refactor:  Restructures code without changing external behavior"
+  echo "  - chore:     Routine maintenance tasks (configs, dependencies, build scripts, etc.)"
+  echo "  - docs:      Changes solely to documentation"
+  echo "  - style:     Code style fixes (formatting, white-space, etc.)"
+  echo "  - test:      Adding or updating tests"
+  echo "  - perf:      Code changes that improve performance"
+  echo "  - build:     Changes related to the build system, package manager, or external dependencies"
+  echo "  - ci:        Changes to CI/CD configuration files and scripts"
+  echo "  - revert:    Reverting a previous commit"
+  echo "  - breaking:  Backward-incompatible changes (Use with caution)"
+  echo ""
+  echo "Examples of Valid Commit Messages:"
+  echo ""
+  echo "    feat:[feature/onboarding][Dev_1]:Implement user guided tour"
+  echo "    fix:[bug/login-flow][Dev_2]:Correct login redirect path after sign-up"
+  echo "    chore:[main][Dev_3]:Update Firebase SDK to latest stable version"
+  echo "    breaking:[release/v2][Dev_4]:Remove deprecated v1 authentication endpoint"
+  echo ""
+  exit 1
+fi
+
+exit 0
