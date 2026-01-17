@@ -95,9 +95,12 @@ export class TransformInterceptor<T> implements NestInterceptor<
 		 * normal response and we return ResponseDto
 		 */
 
+		const responseData = res as T extends { message: string } ? T : null
+
 		return {
 			error: false,
-			message: 'Request successful',
+			message:
+				(responseData && responseData?.message) || 'Request successfully done',
 			data: res
 		}
 	}
@@ -109,7 +112,7 @@ export class TransformInterceptor<T> implements NestInterceptor<
 	private errorHandler(exception: HttpException, context: ExecutionContext) {
 		return throwError(() => ({
 			error: true,
-			message: exception?.message,
+			message: exception?.message || 'Something went wrong',
 			details: exception
 		}))
 	}
