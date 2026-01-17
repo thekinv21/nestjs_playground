@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core'
 import { SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app/app.module'
 import { swaggerConfig } from './infrastructure/config'
+import { TransformInterceptor } from './shared'
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
@@ -16,6 +17,8 @@ async function bootstrap() {
 		app,
 		SwaggerModule.createDocument(app, swaggerConfig)
 	)
+
+	app.useGlobalInterceptors(new TransformInterceptor())
 
 	await app.listen(process.env.PORT ?? 4200)
 

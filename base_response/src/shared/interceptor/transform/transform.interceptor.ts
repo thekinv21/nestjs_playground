@@ -6,7 +6,7 @@ import {
 	NestInterceptor
 } from '@nestjs/common'
 import { map, Observable } from 'rxjs'
-import { ErrorResponseDto, PaginatedResponseDto, ResponseDto } from '../dto'
+import { ErrorResponseDto, PaginatedResponseDto, ResponseDto } from '../../dto'
 
 type TTransformIntercept<T> =
 	| ResponseDto<T>

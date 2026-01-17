@@ -1,2 +1,2 @@
 export * from './dto'
-export * from './interceptor'
+export * from './interceptor/transform'
