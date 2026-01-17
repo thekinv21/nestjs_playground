@@ -1,6 +1,7 @@
 import { VersioningType } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { SwaggerModule } from '@nestjs/swagger'
+import { ZodValidationPipe } from 'nestjs-zod'
 import { AppModule } from './app/app.module'
 import { swaggerConfig } from './infrastructure'
 import { TransformInterceptor } from './shared'
@@ -18,6 +19,7 @@ async function bootstrap() {
 		SwaggerModule.createDocument(app, swaggerConfig)
 	)
 
+	app.useGlobalPipes(new ZodValidationPipe())
 	app.useGlobalInterceptors(new TransformInterceptor())
 
 	await app.listen(process.env.PORT ?? 4200)
