@@ -30,8 +30,9 @@ export const PaginatedMetaDtoSchema = z.object({
 	limit: z.number().int().positive(),
 	total: z.number().int().nonnegative(),
 	totalPage: z.number().int().nonnegative(),
-	isLast: z.boolean(),
-	isFirst: z.boolean(),
+	currentPage: z.number().int().positive(),
+	isLastPage: z.boolean(),
+	isFirstPage: z.boolean(),
 	isEmpty: z.boolean()
 })
 
@@ -52,8 +53,9 @@ export class PaginatedMetaDto {
 	limit: number
 	total: number
 	totalPage: number
-	isLast: boolean
-	isFirst: boolean
+	currentPage: number
+	isLastPage: boolean
+	isFirstPage: boolean
 	isEmpty: boolean
 }
 
@@ -61,7 +63,7 @@ export class PaginatedResponseDto<T> {
 	error: boolean
 	message: string
 	data: {
-		content: T
+		content: T[]
 		meta: PaginatedMetaDto
 	}
 }
