@@ -13,6 +13,8 @@ async function bootstrap() {
 		type: VersioningType.URI
 	})
 
+	app.setGlobalPrefix('api')
+
 	SwaggerModule.setup(
 		'docs',
 		app,
