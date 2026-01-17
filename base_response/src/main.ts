@@ -2,7 +2,7 @@ import { VersioningType } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app/app.module'
-import { swaggerConfig } from './infrastructure/config'
+import { swaggerConfig } from './infrastructure'
 import { TransformInterceptor } from './shared'
 
 async function bootstrap() {
