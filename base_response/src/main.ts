@@ -12,11 +12,15 @@ async function bootstrap() {
 	})
 
 	SwaggerModule.setup(
-		'api',
+		'docs',
 		app,
 		SwaggerModule.createDocument(app, swaggerConfig)
 	)
 
-	await app.listen(process.env.PORT ?? 3000)
+	await app.listen(process.env.PORT ?? 4200)
+
+	console.log(
+		`Swagger documentation: http://localhost:${process.env.PORT ?? 4200}/docs`
+	)
 }
 bootstrap()
