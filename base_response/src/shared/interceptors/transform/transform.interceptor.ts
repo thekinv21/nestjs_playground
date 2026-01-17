@@ -1,9 +1,9 @@
+import { TPaginatedResponse } from '@/shared/types'
 import {
 	CallHandler,
 	ExecutionContext,
 	HttpException,
 	Injectable,
-	Logger,
 	NestInterceptor
 } from '@nestjs/common'
 import { Request, Response } from 'express'
@@ -40,10 +40,8 @@ export class TransformInterceptor<T> implements NestInterceptor<
 		res: T,
 		context: ExecutionContext
 	): TTransformIntercept<T> {
-		const logger = new Logger(TransformInterceptor.name)
-
-		const response = context.switchToHttp().getResponse<Response>()
 		const request = context.switchToHttp().getRequest<Request>()
+		const response = context.switchToHttp().getResponse<Response>()
 
 		/**
 		 * @description: If request query has offset and limit, then it's a
@@ -55,12 +53,41 @@ export class TransformInterceptor<T> implements NestInterceptor<
 			request?.query?.offset !== undefined &&
 			request?.query?.limit !== undefined
 		) {
-			logger.warn('Paginated Response', {
-				offset: +request.query.offset,
-				limit: +request.query.limit
-			})
+			const offset: number = +request.query.offset
+			const limit: number = +request.query.limit
 
-			return new PaginatedResponseDto<T>()
+			const paginatedData = res as TPaginatedResponse<unknown>
+			const content = paginatedData && paginatedData?.data
+			const total: number = paginatedData && paginatedData?.total
+			const message: string = paginatedData && paginatedData?.message
+
+			const totalPage: number = Math.ceil(total / limit)
+			const currentPage: number = Math.floor(offset / limit) + 1
+
+			const isLastPage: boolean = offset + limit >= total
+
+			const isFirstPage: boolean = offset === 0
+
+			const isEmpty: boolean =
+				content && Array.isArray(content) && content?.length === 0
+
+			return {
+				error: false,
+				message,
+				data: {
+					meta: {
+						offset,
+						limit,
+						total,
+						totalPage,
+						currentPage,
+						isFirstPage,
+						isLastPage,
+						isEmpty
+					},
+					content: content as T[]
+				}
+			}
 		}
 
 		/**
@@ -68,12 +95,11 @@ export class TransformInterceptor<T> implements NestInterceptor<
 		 * normal response and we return ResponseDto
 		 */
 
-		logger.debug('Normal Response', {
-			offset: request.query.offset,
-			limit: request.query.limit
-		})
-
-		return new ResponseDto<T>()
+		return {
+			error: false,
+			message: 'Request successful',
+			data: res
+		}
 	}
 
 	/**

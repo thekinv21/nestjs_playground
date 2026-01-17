@@ -4,17 +4,19 @@ import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class AppService {
-	execute(queries: QueryDto) {
+	getWithPagination(queries: QueryDto) {
 		return {
-			paginated: true,
-			data: databaseData,
-			meta: {
-				totalItems: databaseData.length,
-				itemCount: databaseData.length,
-				itemsPerPage: queries.limit,
-				totalPages: 1,
-				currentPage: 1
-			}
+			message: 'Data fetched successfully',
+			total: databaseData?.length,
+			data: databaseData
 		}
+	}
+
+	getList() {
+		return databaseData
+	}
+
+	getForSelect() {
+		return databaseData
 	}
 }
